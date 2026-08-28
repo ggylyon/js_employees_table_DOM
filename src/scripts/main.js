@@ -6,7 +6,13 @@ const tableHead = table.querySelector('thead');
 
 // #region SORT
 
+let isSorted = false;
+
 function sortBy(rows, collection, columnPosition = 0, reversed = false) {
+  if (!isSorted) {
+    isSorted = true;
+  }
+
   const sortedArray = [...rows];
 
   sortedArray.sort((firstElement, secondElement) => {
@@ -189,7 +195,7 @@ document.body.append(notification);
 
 const MIN_NAME_LENGTH = 4;
 
-submitButton.addEventListener('click' || 'submit', (e) => {
+function submitCheck(e) {
   e.preventDefault();
   notification.style.visibility = '';
 
@@ -226,7 +232,7 @@ submitButton.addEventListener('click' || 'submit', (e) => {
     return;
   }
 
-  if (salaryValue.length <= 0) {
+  if (String(salaryValue).length <= 0) {
     notificationDescription.innerText = `Salary is required`;
 
     return;
@@ -280,19 +286,24 @@ submitButton.addEventListener('click' || 'submit', (e) => {
 
   tableBody.append(newEmployee);
 
-  sortBy(
-    tableBody.querySelectorAll('tr'),
-    tableBody,
-    sortCellIndex,
-    reversedSort,
-  );
+  if (isSorted) {
+    sortBy(
+      tableBody.querySelectorAll('tr'),
+      tableBody,
+      sortCellIndex,
+      reversedSort,
+    );
+  }
 
   nameInput.value = '';
   positionInput.value = '';
   ageInput.value = '';
   officeSelect.value = '';
   salaryInput.value = '';
-});
+}
+
+submitButton.addEventListener('click', (e) => submitCheck(e));
+submitButton.addEventListener('submit', (e) => submitCheck(e));
 
 // #endregion
 
@@ -332,12 +343,14 @@ tableBody.addEventListener('dblclick', (e) => {
       e.target.innerText = valueInput.value;
       valueInput.remove();
 
-      sortBy(
-        tableBody.querySelectorAll('tr'),
-        tableBody,
-        sortCellIndex,
-        reversedSort,
-      );
+      if (isSorted) {
+        sortBy(
+          tableBody.querySelectorAll('tr'),
+          tableBody,
+          sortCellIndex,
+          reversedSort,
+        );
+      }
 
       return;
     }
