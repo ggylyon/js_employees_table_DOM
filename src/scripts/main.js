@@ -42,6 +42,7 @@ function sortBy(rows, collection, columnPosition = 0, reversed = false) {
 
 let reversedSort = true;
 let sortCellIndex = 0;
+let currentSortByIndex = -1;
 
 tableHead.addEventListener('click', (e) => {
   if (!e.target.closest('th')) {
@@ -49,7 +50,13 @@ tableHead.addEventListener('click', (e) => {
   }
 
   sortCellIndex = e.target.cellIndex;
-  reversedSort = !reversedSort;
+
+  if (currentSortByIndex !== sortCellIndex) {
+    reversedSort = false;
+    currentSortByIndex = sortCellIndex;
+  } else {
+    reversedSort = !reversedSort;
+  }
 
   sortBy(
     tableBody.querySelectorAll('tr'),
@@ -332,6 +339,7 @@ tableBody.addEventListener('dblclick', (e) => {
   valueInput.type = 'text';
   valueInput.classList = 'cell-input';
   valueInput.name = 'cell-input';
+  valueInput.value = initialValue;
 
   e.target.append(valueInput);
   valueInput.focus();
